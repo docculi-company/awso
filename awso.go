@@ -63,3 +63,27 @@ func (o *Awso) UploadFile(usrId string, filename string, file io.Reader) {
 		fmt.Printf("s3Uploader error: %s\n\n", err)
 	}
 }
+
+////
+//
+// Delete file
+//
+////
+func (o *Awso) DeleteFile(usrId string, filename string) {
+	bucket := "docculi-image"
+	key := bucket + "/" + usrId + "/" + filename
+	_, err := (*o).s3svc.DeleteObject(&s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		fmt.Printf("S3 error: unable to delete object %q from bucket %q, %v\n\n", key, bucket, err)
+	}
+	err = (*o).s3svc.WaitUntilObjectNotExists(&s3.HeadObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		fmt.Printf("S3 error: %s\n\n", err)
+	}
+}
