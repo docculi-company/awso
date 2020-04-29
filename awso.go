@@ -95,7 +95,7 @@ func (o *Awso) DeleteFile(usrId string, filename string) {
 // Send an email notification
 //
 ////
-func (o *Awso) sendEmail(sender string, recipient string, subject string, htmlBody string, textBody string) {
+func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBody string, textBody string) {
 	// Specify a configuration set. To use a configuration
 	// set, comment the next line and line 92.
 	//ConfigurationSet = "ConfigSet"
