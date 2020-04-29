@@ -106,7 +106,7 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 	// Assemble the email.
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
-			CcAddresses: []*string{aws.String("")},
+			CcAddresses: []*string{},
 			ToAddresses: []*string{
 				aws.String(recipient),
 			},
@@ -131,6 +131,8 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 		// Uncomment to use a configuration set
 		//ConfigurationSetName: aws.String(ConfigurationSet),
 	}
+
+	fmt.Printf("%v", input.Destination.ToAddresses)
 
 	// Attempt to send the email.
 	result, err := (*o).s3ses.SendEmail(input)
