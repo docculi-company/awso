@@ -113,10 +113,10 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 		},
 		Message: &ses.Message{
 			Body: &ses.Body{
-				Html: &ses.Content{
+				/*Html: &ses.Content{
 					Charset: aws.String(CharSet),
 					Data:    aws.String(htmlBody),
-				},
+				},*/
 				Text: &ses.Content{
 					Charset: aws.String(CharSet),
 					Data:    aws.String(textBody),
