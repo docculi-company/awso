@@ -106,7 +106,7 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 	// Assemble the email.
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
-			CcAddresses: []*string{},
+			CcAddresses: []*string{""},
 			ToAddresses: []*string{
 				aws.String(recipient),
 			},
