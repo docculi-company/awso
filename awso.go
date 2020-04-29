@@ -53,9 +53,10 @@ func (o *Awso) GetSignedUrl(usrId string, filename string) string {
 //
 ////
 func (o *Awso) UploadFile(usrId string, filename string, file io.Reader) {
-	key := "docculi-image/" + usrId + "/" + filename
+	bucket := "docculi-image"
+	key := bucket + "/" + usrId + "/" + filename
 	_, err := (*o).s3u.Upload(&s3manager.UploadInput{
-		Bucket: aws.String("docculi-image"),
+		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 		Body:   file,
 	})
