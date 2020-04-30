@@ -107,20 +107,18 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
 			CcAddresses: []*string{},
-			ToAddresses: []*string{
-				aws.String(recipient),
-			},
+			ToAddresses: []*string{aws.String(recipient)},
 		},
 		Message: &ses.Message{
 			Body: &ses.Body{
-				/*Html: &ses.Content{
+				Html: &ses.Content{
 					Charset: aws.String(CharSet),
 					Data:    aws.String(htmlBody),
-				},*/
-				Text: &ses.Content{
+				},
+				/*Text: &ses.Content{
 					Charset: aws.String(CharSet),
 					Data:    aws.String(textBody),
-				},
+				},*/
 			},
 			Subject: &ses.Content{
 				Charset: aws.String(CharSet),
@@ -131,8 +129,6 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 		// Uncomment to use a configuration set
 		//ConfigurationSetName: aws.String(ConfigurationSet),
 	}
-
-	fmt.Printf("%v", input.Destination.ToAddresses)
 
 	// Attempt to send the email.
 	result, err := (*o).s3ses.SendEmail(input)
@@ -159,6 +155,6 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 		return
 	}
 
-	fmt.Printf("Email Sent to address: %s\n\n" + recipient)
+	fmt.Printf("Email Sent to address: %s\n\n", recipient)
 	fmt.Printf("Result: %s\n\n", result)
 }
