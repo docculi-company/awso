@@ -63,6 +63,8 @@ func (o *Awso) UploadFile(usrId string, filename string, file io.Reader) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
 }
 
 ////
@@ -88,6 +90,8 @@ func (o *Awso) DeleteFile(usrId string, filename string) error {
 			return err
 		}
 	}
+
+	return nil
 }
 
 ////
