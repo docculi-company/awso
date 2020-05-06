@@ -42,7 +42,6 @@ func (o *Awso) GetSignedUrl(usrId string, filename string) string {
 	})
 	signedUrl, err := req.Presign(24 * time.Hour)
 	if err != nil {
-		fmt.Printf("S3 error: unable to upload %q to %q, %v\n\n", key, bucket, err)
 		return ""
 	}
 	return signedUrl
@@ -53,7 +52,7 @@ func (o *Awso) GetSignedUrl(usrId string, filename string) string {
 // Upload file
 //
 ////
-func (o *Awso) UploadFile(usrId string, filename string, file io.Reader) {
+func (o *Awso) UploadFile(usrId string, filename string, file io.Reader) error {
 	bucket := "docculi-image"
 	key := bucket + "/" + usrId + "/" + filename
 	_, err := (*o).s3u.Upload(&s3manager.UploadInput{
@@ -62,7 +61,7 @@ func (o *Awso) UploadFile(usrId string, filename string, file io.Reader) {
 		Body:   file,
 	})
 	if err != nil {
-		fmt.Printf("s3Uploader error: %s\n\n", err)
+		return err
 	}
 }
 
@@ -71,7 +70,7 @@ func (o *Awso) UploadFile(usrId string, filename string, file io.Reader) {
 // Delete file
 //
 ////
-func (o *Awso) DeleteFile(usrId string, filename string) {
+func (o *Awso) DeleteFile(usrId string, filename string) error {
 	bucket := "docculi-image"
 	key := bucket + "/" + usrId + "/" + filename
 	_, err := (*o).s3svc.DeleteObject(&s3.DeleteObjectInput{
@@ -79,14 +78,15 @@ func (o *Awso) DeleteFile(usrId string, filename string) {
 		Key:    aws.String(key),
 	})
 	if err != nil {
-		fmt.Printf("S3 error: unable to delete object %q from bucket %q, %v\n\n", key, bucket, err)
-	}
-	err = (*o).s3svc.WaitUntilObjectNotExists(&s3.HeadObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
-	})
-	if err != nil {
-		fmt.Printf("S3 error: %s\n\n", err)
+		return err
+	} else {
+		err := (*o).s3svc.WaitUntilObjectNotExists(&s3.HeadObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(key),
+		})
+		if err != nil {
+			return err
+		}
 	}
 }
 
@@ -132,7 +132,6 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 
 	// Attempt to send the email.
 	result, err := (*o).s3ses.SendEmail(input)
-
 	// Display error messages if they occur.
 	if err != nil {
 		if aerr, ok := err.(awserr.Error); ok {
@@ -151,7 +150,6 @@ func (o *Awso) SendEmail(sender string, recipient string, subject string, htmlBo
 			// Message from an error.
 			fmt.Println(err.Error())
 		}
-
 		return
 	}
 
