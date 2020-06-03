@@ -40,7 +40,7 @@ func (o *Awso) GetSignedUrl(usrId string, filename string) string {
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	})
-	signedUrl, err := req.Presign(604799 * time.Second)
+	signedUrl, err := req.Presign(144 * time.Hour)
 	if err != nil {
 		return ""
 	}
